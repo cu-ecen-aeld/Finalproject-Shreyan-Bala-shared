@@ -11,7 +11,10 @@ ifeq ($(LDFLAGS),)
 endif
 
 TARGET= mpu6050
-SRCS:= mpu6050.c
+SRCS:= mpu6050.c \
+	i2c_utils.h
+
+
 
 default: $(TARGET)
 all: $(TARGET)
