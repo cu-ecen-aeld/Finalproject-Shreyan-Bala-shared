@@ -1,15 +1,11 @@
-/* ------------------------------------------------------------ *
- * file:        i2c_bme280.c                                    *
- * purpose:     Extract sensor data from Bosch BME280 modules.  *
- *              Functions for I2C bus communication, get and    *
- *              set sensor register data. Ths file belongs to   *
- *              the pi-bme280 package. Functions are called     *
- *              from getbme280.c, globals are in getbme280.h.   *
- *                                                              *
- * Requires:	I2C development packages i2c-tools libi2c-dev   *
- *                                                              *
- * author:      03/10/2020 Frank4DD                             *
- * ------------------------------------------------------------ */
+/* ------------------------------------------------------------ 
+  file:        getbme280.c                                      
+	Modified by Mehul Patel  
+	Author : Frank M.
+	reference : https://github.com/fm4dd/pi-bme280
+	Other refence : https://github.com/BoschSensortec/BME280_driver
+ *-----------------------------------------------------------------  
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
