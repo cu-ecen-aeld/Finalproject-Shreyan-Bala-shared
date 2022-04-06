@@ -1,33 +1,14 @@
-ifeq ($(CC),)
-	CC= $(CROSS_COMPILE)gcc
-endif
+CC=gcc
+CFLAGS= -O3 -Wall -g
+LIBS= -lm
+AR=ar
 
-ifeq ($(CFLAGS),)
-	CFLAGS= -g -Wall
-endif
- 
-ifeq ($(LDFLAGS),)
-	LDFLAGS= -pthread 
-endif
+ALLBIN=getbme280
 
-TARGET1= mpu6050
-TARGET2= bme280
+all: ${ALLBIN}
 
-SRCS1:= mpu6050.c \
-	i2c_utils.h
-SRCS2:= getbme280.c i2c_bme280.c getbme280.h
+clean:
+	rm -f *.o ${ALLBIN}
 
-
-default: $(TARGET1) $(TARGET2)
-all: $(TARGET1) $(TARGET2)
-
-
-$(TARGET1): $(SRCS1) 
-	$(CC) $(CFLAGS) $^ -o $@ $(INCLUDES) $(LDFLAGS)
-$(TARGET2): $(SRCS2) 
-	$(CC) $(CFLAGS) $^ -o $@ $(INCLUDES) $(LDFLAGS)
-
-
-clean: 	
-	rm -f *.o $(TARGET1) *.elf *.map
-	rm -f *.o $(TARGET2) *.elf *.map
+getbme280: i2c_bme280.o getbme280.o
+	$(CC) i2c_bme280.o getbme280.o -o getbme280 ${LIBS}
