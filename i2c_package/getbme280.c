@@ -13,7 +13,7 @@ reference : https://github.com/fm4dd/pi-bme280
 #include <time.h>
 #include "getbme280.h"
 
-int verbose = 0;
+
 int outflag = 0;
 int argflag = 0; // 1=dump, 2=info, 3=reset, 4=data, 5=continuous
 char osrs_mode[7] = {0};  // oversampling mode
