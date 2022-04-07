@@ -28,7 +28,7 @@
  * Global variables and defaults                                *
  * ------------------------------------------------------------ */
 
-int verbose = 0; 
+int verbo = 0; 
  
 int outflag = 0;
 int argflag = 0; // 1=dump, 2=info, 3=reset, 4=data, 5=continuous
@@ -98,12 +98,12 @@ void parseargs(int argc, char* argv[]) {
       switch (arg) {
          // arg -v verbose, type: flag, optional
          case 'v':
-            verbose = 1; break;
+            verbo = 1; break;
 
          // arg -a + sensor address, type: string
          // mandatory, example: 0x76
          case 'a':
-            if(verbose == 1) printf("Debug: arg -a, value %s\n", optarg);
+            if(verbo == 1) printf("Debug: arg -a, value %s\n", optarg);
             if (strlen(optarg) != 4) {
                printf("Error: Cannot get valid -a sensor address argument.\n");
                exit(-1);
@@ -114,7 +114,7 @@ void parseargs(int argc, char* argv[]) {
          // arg -b + I2C bus, type: string
          // optional, example: "/dev/i2c-1"
          case 'b':
-            if(verbose == 1) printf("Debug: arg -b, value %s\n", optarg);
+            if(verbo == 1) printf("Debug: arg -b, value %s\n", optarg);
             if (strlen(optarg) >= sizeof(i2c_bus)) {
                printf("Error: I2C bus argument to long.\n");
                exit(-1);
@@ -125,13 +125,13 @@ void parseargs(int argc, char* argv[]) {
          // arg -d
          // optional, dumps the complete register map data
          case 'd':
-            if(verbose == 1) printf("Debug: arg -d\n");
+            if(verbo == 1) printf("Debug: arg -d\n");
             argflag = 1;
             break;
 
          // arg -f + IIR filter mode, type: string off,2,4,8, or 16
          case 'f':
-            if(verbose == 1) printf("Debug: arg -f, value %s\n", optarg);
+            if(verbo == 1) printf("Debug: arg -f, value %s\n", optarg);
             if (strlen(optarg) >= sizeof(iir_mode)) {
                printf("Error: IIR filter argument to long.\n");
                exit(-1);
@@ -142,13 +142,13 @@ void parseargs(int argc, char* argv[]) {
          // arg -i
          // optional, prints sensor information
          case 'i':
-            if(verbose == 1) printf("Debug: arg -i\n");
+            if(verbo == 1) printf("Debug: arg -i\n");
             argflag = 2;
             break;
 
          // arg -m sets operations mode, type: string
          case 'm':
-            if(verbose == 1) printf("Debug: arg -m, value %s\n", optarg);
+            if(verbo == 1) printf("Debug: arg -m, value %s\n", optarg);
             if (strlen(optarg) >= sizeof(osrs_mode)) {
                printf("Error: oversampling argument to long.\n");
                exit(-1);
@@ -166,7 +166,7 @@ void parseargs(int argc, char* argv[]) {
 
          // arg -p sets power mode, type: string
          case 'p':
-            if(verbose == 1) printf("Debug: arg -p, value %s\n", optarg);
+            if(verbo == 1) printf("Debug: arg -p, value %s\n", optarg);
             if (strlen(optarg) >= sizeof(pwr_mode)) {
                printf("Error: power mode argument to long.\n");
                exit(-1);
@@ -177,13 +177,13 @@ void parseargs(int argc, char* argv[]) {
          // arg -r
          // optional, resets sensor
          case 'r':
-            if(verbose == 1) printf("Debug: arg -r\n");
+            if(verbo == 1) printf("Debug: arg -r\n");
             argflag = 3;
             break;
 
          // arg -s sets standby time, type: string
          case 's':
-            if(verbose == 1) printf("Debug: arg -s, value %s\n", optarg);
+            if(verbo == 1) printf("Debug: arg -s, value %s\n", optarg);
             if (strlen(optarg) >= sizeof(stby_time)) {
                printf("Error: standby time argument to long.\n");
                exit(-1);
@@ -193,13 +193,13 @@ void parseargs(int argc, char* argv[]) {
 
          // arg -t reads the sensor data
          case 't':
-            if(verbose == 1) printf("Debug: arg -t\n");
+            if(verbo == 1) printf("Debug: arg -t\n");
             argflag = 4;
             break;
 
          // arg -c reads sensor data continuously
          case 'c':
-            if(verbose == 1) printf("Debug: arg -c\n");
+            if(verbo == 1) printf("Debug: arg -c\n");
             argflag = 5;
             break;
 
@@ -207,7 +207,7 @@ void parseargs(int argc, char* argv[]) {
          // writes the sensor output to file. example: /tmp/sensor.htm
          case 'o':
             outflag = 1;
-            if(verbose == 1) printf("Debug: arg -o, value %s\n", optarg);
+            if(verbo == 1) printf("Debug: arg -o, value %s\n", optarg);
             if (strlen(optarg) >= sizeof(htmfile)) {
                printf("Error: html file argument to long.\n");
                exit(-1);
@@ -341,8 +341,8 @@ int main(int argc, char *argv[]) {
    if(strlen(osrs_mode) > 0) {
       char type = osrs_mode[0];
 
-      if(verbose == 1) printf("Debug: Measuring type: [%c]\n", type);
-      if(verbose == 1) printf("Debug: Set osrs value: [%s]\n", &osrs_mode[2]);
+      if(verbo == 1) printf("Debug: Measuring type: [%c]\n", type);
+      if(verbo == 1) printf("Debug: Set osrs value: [%s]\n", &osrs_mode[2]);
 
       if(type == 't') res = set_t_osrs(&osrs_mode[2]);
       if(type == 'h') res = set_h_osrs(&osrs_mode[2]);
