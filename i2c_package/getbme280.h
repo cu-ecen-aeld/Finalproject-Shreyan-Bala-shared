@@ -8,7 +8,7 @@
 */
 #include "stdint.h"
 #define I2CBUS        "/dev/i2c-1" // Raspi default I2C bus
-#define BME280_ADDR        "0x77"  // The sensor default I2C addr
+#define BME280_ADDR        "0x76"  // The sensor default I2C addr
 #define CHIP_ID              0x60  // BME280 responds with 0x60
 #define POWER_MODE_NORMAL    0x00  // sensor default power mode
 /* ------------------------------------------------------------ *
