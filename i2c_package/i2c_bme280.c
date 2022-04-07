@@ -21,6 +21,7 @@
 #include "getbme280.h"
 
  int i2cfd;       // I2C file descriptor
+ int verbose =0;
 /* ------------------------------------------------------------ *
  * get_i2cbus() - Enables the I2C bus communication. RPi 2,3,4  *
  * use /dev/i2c-1, RPi 1 used i2c-0, NanoPi Neo also uses i2c-0 *
