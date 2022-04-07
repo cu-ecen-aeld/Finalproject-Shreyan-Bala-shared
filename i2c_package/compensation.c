@@ -1,7 +1,6 @@
 #include "compensation.h"
 
-#include <i2c/smbus.h>
-
+#include "i2c_utils.h"
 static int32_t t_fine = 0;
 
 static uint16_t dig_T1 = 0;

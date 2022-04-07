@@ -1,7 +1,7 @@
 #include "bme280.h"
 
 #include <fcntl.h>
-#include <i2c/smbus.h>
+#include "i2c_utils.h"
 #include <linux/i2c-dev.h>
 #include <math.h>
 #include <stdio.h>

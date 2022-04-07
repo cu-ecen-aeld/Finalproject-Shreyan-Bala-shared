@@ -14,7 +14,8 @@ TARGET= bme280
 SRCS:= bme280.c \
        compensation.c \
        bme280.h \
-       compensation.h 
+       compensation.h \
+       i2c_utils.h 
 
 
 
