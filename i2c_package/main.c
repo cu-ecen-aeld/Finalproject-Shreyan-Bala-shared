@@ -187,7 +187,7 @@ int main()
     if (rslt != BME280_OK)
     {
         fprintf(stderr, "Failed to initialize the device (code %+d).\n", rslt);
-        exit(1);
+      //  exit(1);
     }
 
     rslt = stream_sensor_data_forced_mode(&dev);
