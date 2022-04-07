@@ -1,12 +1,10 @@
-/* ------------------------------------------------------------ 
-  file:        getbme280.c                                      
-	Modified by Mehul Patel  
-	Author : Frank M.
-	reference : https://github.com/fm4dd/pi-bme280
-	Other refence : https://github.com/BoschSensortec/BME280_driver
- *-----------------------------------------------------------------  
-*/
-#include "stdint.h"
+/* ------------------------------------------------------------ *
+ * file:        getbme280.h                                     *
+ * purpose:     header file for getbme280.c and i2c_bme280.c    *
+ *                                                              *
+ * author:      05/04/2018 Frank4DD                             *
+ * ------------------------------------------------------------ */
+#include <stdint.h>
 #define I2CBUS        "/dev/i2c-1" // Raspi default I2C bus
 #define BME280_ADDR        "0x76"  // The sensor default I2C addr
 #define CHIP_ID              0x60  // BME280 responds with 0x60
@@ -91,8 +89,7 @@
 /* ------------------------------------------------------------ *
  * global variables                                             *
  * ------------------------------------------------------------ */
-     // I2C file descriptor
-   // debug flag, 0 = normal, 1 = debug mode
+    // debug flag, 0 = normal, 1 = debug mode
 
 /* ------------------------------------------------------------ *
  * BME280 version, status and control data structure            *

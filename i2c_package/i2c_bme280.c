@@ -1,11 +1,15 @@
-/* ------------------------------------------------------------ 
-  file:        getbme280.c                                      
-	Modified by Mehul Patel  
-	Author : Frank M.
-	reference : https://github.com/fm4dd/pi-bme280
-	Other refence : https://github.com/BoschSensortec/BME280_driver
- *-----------------------------------------------------------------  
-*/
+/* ------------------------------------------------------------ *
+ * file:        i2c_bme280.c                                    *
+ * purpose:     Extract sensor data from Bosch BME280 modules.  *
+ *              Functions for I2C bus communication, get and    *
+ *              set sensor register data. Ths file belongs to   *
+ *              the pi-bme280 package. Functions are called     *
+ *              from getbme280.c, globals are in getbme280.h.   *
+ *                                                              *
+ * Requires:	I2C development packages i2c-tools libi2c-dev   *
+ *                                                              *
+ * author:      03/10/2020 Frank4DD                             *
+ * ------------------------------------------------------------ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,10 +19,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include "getbme280.h"
-
-int i2cfd;       // I2C file descriptor
-int verbose;     // debug flag, 0 = normal, 1 = debug mode
-
+ int i2cfd;       // I2C file descriptor
 /* ------------------------------------------------------------ *
  * get_i2cbus() - Enables the I2C bus communication. RPi 2,3,4  *
  * use /dev/i2c-1, RPi 1 used i2c-0, NanoPi Neo also uses i2c-0 *
