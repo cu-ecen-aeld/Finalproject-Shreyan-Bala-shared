@@ -1,32 +1,18 @@
+CROSS_COMPILE=
+
 ifeq ($(CC),)
-	CC= $(CROSS_COMPILE)gcc
+	CC=$(CROSS_COMPILE)gcc
 endif
 
 ifeq ($(CFLAGS),)
-	CFLAGS= -g -Wall
-endif
- 
-ifeq ($(LDFLAGS),)
-	LDFLAGS= -pthread 
+	CFLAGS= -g -Wall -Werror
 endif
 
-TARGET1= bme280
+all: bme_sensor
+default: bme_sensor
 
+bme_sensor: main.o bme280.o
+	$(CROSS_COMPILE)$(CC) $(CFLAGS) -o bme_sensor main.o bme280.o $(LDFLAGS)
 
-SRCS1:= getbme280.c \
-	i2c_bme280.c \
-	getbme280.h
-
-
-
-default: $(TARGET1) 
-all: $(TARGET1) 
-
-
-$(TARGET1): $(SRCS1) 
-	$(CC) $(CFLAGS) $^ -o $@ $(INCLUDES) $(LDFLAGS)
-
-
-
-clean: 	
-	rm -f *.o $(TARGET2) *.elf *.map
+clean :
+	rm -f *.o bme_sensor
