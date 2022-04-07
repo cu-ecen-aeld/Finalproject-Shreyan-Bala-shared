@@ -1,8 +1,30 @@
-bme280:	bme280.o compensation.o
-	gcc -Wall $^ -o $@ -li2c
+ifeq ($(CC),)
+	CC= $(CROSS_COMPILE)gcc
+endif
 
-%.o:	%.c %.h
-	gcc -Wall -O2 -c $< -o $@
+ifeq ($(CFLAGS),)
+	CFLAGS= -g -Wall
+endif
+ 
+ifeq ($(LDFLAGS),)
+	LDFLAGS= -pthread 
+endif
 
-clean:
-	rm -f *.o bme280
+TARGET= bme280
+SRCS:= bme280.c \
+       compensation.c \
+       bme280.h \
+       compensation.h 
+
+
+
+default: $(TARGET)
+all: $(TARGET)
+
+
+$(TARGET): $(SRCS) 
+	$(CC) $(CFLAGS) $^ -o $@ $(INCLUDES) $(LDFLAGS)
+
+
+clean: 	
+	rm -f *.o $(TARGET) *.elf *.map
