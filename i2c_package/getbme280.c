@@ -23,8 +23,7 @@ char stby_time[5] = {0};  // standby time
 char senaddr[256] = BME280_ADDR;
 char i2c_bus[256] = I2CBUS;
 char htmfile[256] = {0};
-int i2cfd;       // I2C file descriptor
-int verbose; 
+
 int main() 
 {    		  
 	get_i2cbus(i2c_bus, senaddr);
