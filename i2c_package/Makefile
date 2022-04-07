@@ -1,21 +1,8 @@
-CROSS_COMPILE=
+bme280:	bme280.o compensation.o
+	gcc -Wall $^ -o $@ -li2c
 
-ifeq ($(CC),)
-	CC=$(CROSS_COMPILE)gcc
-endif
+%.o:	%.c %.h
+	gcc -Wall -O2 -c $< -o $@
 
-ifeq ($(CFLAGS),)
-	CFLAGS= -g -Wall -Werror
-endif
-
-#ifeq ($(LDFLAGS),)
-#	LDFLAGS= -lm
-#endif
-all: bme_sensor
-default: bme_sensor
-
-bme_sensor: i2c_bme280.o getbme280.o
-	$(CROSS_COMPILE)$(CC) $(CFLAGS) -o bme_sensor i2c_bme280.o getbme280.o $(LDFLAGS)
-
-clean :
-	rm -f *.o bme_sensor
+clean:
+	rm -f *.o bme280
