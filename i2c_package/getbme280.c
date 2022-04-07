@@ -28,7 +28,7 @@
  * Global variables and defaults                                *
  * ------------------------------------------------------------ */
 
-verbose = 0; 
+int verbose = 0; 
  
 int outflag = 0;
 int argflag = 0; // 1=dump, 2=info, 3=reset, 4=data, 5=continuous
