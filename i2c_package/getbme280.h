@@ -91,8 +91,8 @@
 /* ------------------------------------------------------------ *
  * global variables                                             *
  * ------------------------------------------------------------ */
-int i2cfd;       // I2C file descriptor
-int verbose;     // debug flag, 0 = normal, 1 = debug mode
+     // I2C file descriptor
+   // debug flag, 0 = normal, 1 = debug mode
 
 /* ------------------------------------------------------------ *
  * BME280 version, status and control data structure            *
