@@ -19,7 +19,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include "getbme280.h"
-int verbose;
+
  int i2cfd;       // I2C file descriptor
 /* ------------------------------------------------------------ *
  * get_i2cbus() - Enables the I2C bus communication. RPi 2,3,4  *
