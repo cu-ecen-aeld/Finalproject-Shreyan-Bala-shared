@@ -248,7 +248,7 @@ int main(int argc, char *argv[]) {
     * get current time (now), write program start if verbose      *
     * ----------------------------------------------------------- */
    time_t tsnow = time(NULL);
-   if(verbose == 1) printf("Debug: ts=[%lld] date=%s", (long long) tsnow, ctime(&tsnow));
+   if(verbo == 1) printf("Debug: ts=[%lld] date=%s", (long long) tsnow, ctime(&tsnow));
 
    /* ----------------------------------------------------------- *
     * "-a" open the I2C bus and connect to the sensor i2c address *
