@@ -16,6 +16,8 @@
 #include <fcntl.h>
 #include "getbme280.h"
 
+int i2cfd;       // I2C file descriptor
+int verbose;     // debug flag, 0 = normal, 1 = debug mode
 
 /* ------------------------------------------------------------ *
  * get_i2cbus() - Enables the I2C bus communication. RPi 2,3,4  *
