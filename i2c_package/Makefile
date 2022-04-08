@@ -10,9 +10,12 @@ ifeq ($(LDFLAGS),)
 	LDFLAGS= -pthread 
 endif
 
-TARGET= mpu6050
-SRCS:= mpu6050.c \
-	i2c_utils.h
+TARGET= bme280
+SRCS:= bme280.c \
+       compensation.c \
+       bme280.h \
+       compensation.h \
+       i2c_utils.h 
 
 
 
