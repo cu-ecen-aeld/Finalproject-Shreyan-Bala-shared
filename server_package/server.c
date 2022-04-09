@@ -212,7 +212,7 @@ int main(int argc, char *argv[]) {
 		graceful_exit(-1);		
 	}
 	
-
+	log_message(LOG_INFO, "listen for connection");
 	//listen for connection
 	rc = listen(sockfd, BACKLOG);
 	if(rc == -1){
@@ -220,7 +220,7 @@ int main(int argc, char *argv[]) {
 		graceful_exit(-1);
 	}
 	
-	
+	log_message(LOG_INFO, "listen successfull");
 	clilen = sizeof(cli_addr);
 
 	pthread_mutex_init( &lock, NULL); //Initialize the mutex
