@@ -11,7 +11,9 @@
 #include <syslog.h>
 
 #define IP_ADDRESS_SIZE 20
-#define PORT 80
+
+#define PORT 8080
+
 
 int main (int argc, char *argv[])
 {
