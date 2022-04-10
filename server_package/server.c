@@ -14,15 +14,13 @@
 // Function designed for chat between client and server.
 void func(int connfd)
 {
-	char buff[MAX] = {"hello from server"};
+	
 	int n;
 	// infinite loop for chat
 	for (;;) {
-		bzero(buff, MAX);
-
 
 		// and send that buffer to client
-		write(connfd, buff, sizeof(buff));
+		write(connfd, "\nhello from the server", sizeof("\nhello from the server"));
 
 		sleep(2);
 	}
