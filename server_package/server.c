@@ -42,8 +42,6 @@
 #define TRUE     (1)
 #define log_message syslog
 
-
-
 int sockfd, newsockfd;
 int fd;
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER; 
