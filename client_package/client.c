@@ -24,7 +24,7 @@ int main (int argc, char *argv[])
 	openlog("Socket Application client",LOG_PID,LOG_USER);
 	printf("Welcome to Socket Application - CLIENT\n");
 	// TODO: Check the actual socket size
-	char server_ipaddress[IP_ADDRESS_SIZE];
+	char server_ipaddress[IP_ADDRESS_SIZE] = {0};
 	memcpy(server_ipaddress, argv[1], strlen(argv[1]));
 	
 
@@ -69,3 +69,4 @@ int main (int argc, char *argv[])
 
 
 }
+
