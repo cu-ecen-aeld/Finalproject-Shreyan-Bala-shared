@@ -1,4 +1,4 @@
-#include <stdio.h>
+/*#include <stdio.h>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <stdlib.h>
@@ -80,9 +80,8 @@ int main()
 	close(sockfd);
 }
 
+*/
 
-#undef de
-#ifdef de
 /*
 *File: server.c
 *
@@ -209,14 +208,14 @@ static void *workerthread_socket(void *param){
 	thread_params_t *thread_param = (thread_params_t *)param;
 	 	
 	while (complete_flag != TRUE) {
-		rc = send(newsockfd, "hello", strlen("hello"), 0); //send to client
+		rc = send(newsockfd, "Hello from server", strlen("Hello from server"), 0); //send to client
 			
 		if(rc == -1) {
 			log_message(LOG_ERR, "ERROR: send() fail");
 			graceful_exit(-1);
 		}
 	
-	
+		sleep(2);
 	}
 	
 	close(newsockfd);
@@ -339,4 +338,4 @@ int main(int argc, char *argv[]) {
 	
 	
 }
-#endif
+
