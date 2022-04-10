@@ -1,4 +1,4 @@
-/*#include <stdio.h>
+#include <stdio.h>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <stdlib.h>
@@ -80,8 +80,12 @@ int main()
 	close(sockfd);
 }
 
-*/
 
+
+
+#undef de
+
+#ifdef de
 /*
 *File: server.c
 *
@@ -338,4 +342,6 @@ int main(int argc, char *argv[]) {
 	
 	
 }
+
+#endif
 
