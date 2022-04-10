@@ -34,7 +34,7 @@
 
 
 /*Macros*/
-#define MYPORT   "9000"
+#define MYPORT   "8080"
 #define BACKLOG  (10)
 #define FALSE    (0)
 #define TRUE     (1)
