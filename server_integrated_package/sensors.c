@@ -73,9 +73,6 @@ void mpu6050() {
     int8_t power = i2c_smbus_read_byte_data(fd, MPU_POWER1);
     i2c_smbus_write_byte_data(fd, MPU_POWER1, ~(1 << 6) & power);
 
-    printf("\n**************************************************************");
-    printf("\n*********************Vehicle Attitude*************************");
-    printf("\n**************************************************************\n\n");
     
     int16_t temp1 = i2c_smbus_read_byte_data(fd, MPU_TEMP1) << 8 |
                         i2c_smbus_read_byte_data(fd, MPU_TEMP2);
@@ -207,7 +204,7 @@ int main(int argc, char **argv) {
     	mpu6050();
     	bme280();
     	
-    	sprintf(message.mesg_text, "%d","%d","%d","%d","%d","%d", "%f", "%f", "%f","%f",(int) xaccel, (int)yaccel, (int)zaccel, (int)xgyro, (int)ygyro, (int)zgyro, temp, station_press, sea_press, humidity);
+    	snprintf(message.mesg_text, sizeof(message.mesg_text), "X acceleration = %d, Y acceleration = %d, Z acceleration = %d, X Gyro = %d, Y Gyro = %d, Z Gyro = %d, Temperature = %f, Tyre pressure = %f, Sea pressure = %f, Humidity = %f",(int) xaccel, (int)yaccel, (int)zaccel, (int)xgyro, (int)ygyro, (int)zgyro, temp, station_press, sea_press, humidity);
     	
     	    // msgsnd to send message
     	msgsnd(msgid, &message, sizeof(message), 0);
