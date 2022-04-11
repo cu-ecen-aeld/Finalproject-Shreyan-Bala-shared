@@ -12,7 +12,9 @@
 #include "bme280.h"
 #include "compensation.h"
 #include <math.h>
-
+#include <sys/ipc.h>
+#include <sys/msg.h>
+#define MAX 10
 
 #define MPU_ACCEL_XOUT1 0x3b
 #define MPU_ACCEL_XOUT2 0x3c
@@ -33,6 +35,24 @@
 
 #define MPU_POWER1 0x6b
 #define MPU_POWER2 0x6c
+
+
+int16_t xaccel = 0;
+int16_t yaccel = 0;
+int16_t zaccel = 0;
+int16_t xgyro  = 0;
+int16_t ygyro = 0;
+int16_t zgyro = 0;
+
+double temp = 0.0;
+double station_press = 0.0;
+double sea_press = 0.0;
+double humidity = 0.0;
+
+struct mesg_buffer {
+    long mesg_type;
+    char mesg_text[200];
+} message;
 
 
 void mpu6050() {
@@ -57,21 +77,21 @@ void mpu6050() {
     printf("\n*********************Vehicle Attitude*************************");
     printf("\n**************************************************************\n\n");
     
-    int16_t temp = i2c_smbus_read_byte_data(fd, MPU_TEMP1) << 8 |
+    int16_t temp1 = i2c_smbus_read_byte_data(fd, MPU_TEMP1) << 8 |
                         i2c_smbus_read_byte_data(fd, MPU_TEMP2);
 
-    int16_t xaccel = i2c_smbus_read_byte_data(fd, MPU_ACCEL_XOUT1) << 8 |
+    xaccel = i2c_smbus_read_byte_data(fd, MPU_ACCEL_XOUT1) << 8 |
                          i2c_smbus_read_byte_data(fd, MPU_ACCEL_XOUT2);
-    int16_t yaccel = i2c_smbus_read_byte_data(fd, MPU_ACCEL_YOUT1) << 8 |
+    yaccel = i2c_smbus_read_byte_data(fd, MPU_ACCEL_YOUT1) << 8 |
                          i2c_smbus_read_byte_data(fd, MPU_ACCEL_YOUT2);
-    int16_t zaccel = i2c_smbus_read_byte_data(fd, MPU_ACCEL_ZOUT1) << 8 |
+    zaccel = i2c_smbus_read_byte_data(fd, MPU_ACCEL_ZOUT1) << 8 |
                          i2c_smbus_read_byte_data(fd, MPU_ACCEL_ZOUT2);
 
-    int16_t xgyro = i2c_smbus_read_byte_data(fd, MPU_GYRO_XOUT1) << 8 |
+    xgyro = i2c_smbus_read_byte_data(fd, MPU_GYRO_XOUT1) << 8 |
                         i2c_smbus_read_byte_data(fd, MPU_GYRO_XOUT2);
-    int16_t ygyro = i2c_smbus_read_byte_data(fd, MPU_GYRO_YOUT1) << 8 |
+    ygyro = i2c_smbus_read_byte_data(fd, MPU_GYRO_YOUT1) << 8 |
                         i2c_smbus_read_byte_data(fd, MPU_GYRO_YOUT2);
-    int16_t zgyro = i2c_smbus_read_byte_data(fd, MPU_GYRO_ZOUT1) << 8 |
+    zgyro = i2c_smbus_read_byte_data(fd, MPU_GYRO_ZOUT1) << 8 |
                         i2c_smbus_read_byte_data(fd, MPU_GYRO_ZOUT2);
 
 
@@ -92,7 +112,7 @@ void bme280() {
     int32_t temp_int = 0;
     int32_t press_int = 0;
     int32_t hum_int = 0;
-    double station_press = 0.0;
+
 
     /* open i2c comms */
     if ((fd = open(DEV_PATH, O_RDWR)) < 0) {
@@ -130,14 +150,6 @@ void bme280() {
     /* set forced mode, pres o/s x 1, temp o/s x 1 and take 1st reading */
     i2c_smbus_write_byte_data(fd, CTRL_MEAS, 0x25);
 
-
-    /* Sleep for 1 second for demonstration purposes.
-     * Data can be streamed with a sleep time down
-     * to 10 ms [usleep(10000)] with oversampling set at x1.
-     * See section 9, appendix B of the Bosch technical
-     * datasheet for details on measurement time calculation.
-     */
-
      /* check data is ready to read */
      if ((i2c_smbus_read_byte_data(fd, STATUS) & 0x9) != 0) {
           printf("%s\n", "Error, data not ready");
@@ -162,15 +174,16 @@ void bme280() {
      /* calculate and print compensated temp. This function is called first, as it also sets the
       * t_fine global variable required by the next two function calls
       */
-     printf("sensor temp: %.2f°C  ", BME280_compensate_T_double(temp_int));
+    temp = BME280_compensate_T_double(temp_int);
 
      station_press = BME280_compensate_P_double(press_int) / 100.0;
 
+
      /* calculate and print compensated press */
-     printf("station press: %.2f hPa, sea level press: %.2f  ", station_press, sta2sea(station_press));
+     sea_press =  sta2sea(station_press);
 
      /* calculate and print compensated humidity */
-     printf("humidity: %.2f %%rH\n", BME280_compensate_H_double(hum_int));
+     humidity = BME280_compensate_H_double(hum_int);
 
 }
 
@@ -180,9 +193,25 @@ int main(int argc, char **argv) {
     printf("\n***********************Vehicle Status*************************");
     printf("\n**************************************************************\n\n");
     
+    key_t key;
+    int msgid;
+  
+    // ftok to generate unique key
+    key = ftok("progfile", 65);
+  
+    // msgget creates a message queue
+    // and returns identifier
+    msgid = msgget(key, 0666 | IPC_CREAT);
+    message.mesg_type = 1;
     while(1) {
     	mpu6050();
     	bme280();
+    	
+    	sprintf(message.mesg_text, "%d","%d","%d","%d","%d","%d", "%f", "%f", "%f","%f",(int) xaccel, (int)yaccel, (int)zaccel, (int)xgyro, (int)ygyro, (int)zgyro, temp, station_press, sea_press, humidity);
+    	
+    	    // msgsnd to send message
+    	msgsnd(msgid, &message, sizeof(message), 0);
+    
     	sleep(5);
     }
 
