@@ -7,7 +7,7 @@ int main( int argc, char * argv [] ) {
 	SSD1306 myDisplay;
 	myDisplay.initDisplay();
 
-	myDisplay.setAltI2C();
+	//myDisplay.setAltI2C();
 	myDisplay.initDisplay();
 	myDisplay.clearDisplay();
 	myDisplay.setWordWrap(TRUE);
