@@ -44,8 +44,8 @@ int16_t xgyro  = 0;
 int16_t ygyro = 0;
 int16_t zgyro = 0;
 
-double temp = 0.0;
-double station_press = 0.0;
+int temp = 0;
+int station_press = 0;
 double sea_press = 0.0;
 double humidity = 0.0;
 
@@ -62,12 +62,12 @@ void mpu6050() {
 	
     if ((fd = open(fileName, O_RDWR)) < 0) {
         printf("Failed to open i2c port\n");
-      //  exit(1);
+        exit(1);
     }
 	
     if (ioctl(fd, I2C_SLAVE, address) < 0) {
         printf("Unable to get bus access to talk to slave\n");
-      //  exit(1);
+        exit(1);
     }
     
     int8_t power = i2c_smbus_read_byte_data(fd, MPU_POWER1);
@@ -200,16 +200,26 @@ int main(int argc, char **argv) {
     // and returns identifier
     msgid = msgget(key, 0666 | IPC_CREAT);
     message.mesg_type = 1;
+    int roll = 0;
     while(1) {
     	mpu6050();
     	bme280();
+    	roll = atan2(yaccel, zaccel)* 180 / 3.14159265;
     	
-    	snprintf(message.mesg_text, sizeof(message.mesg_text), "X acceleration = %d, Y acceleration = %d, Z acceleration = %d, X Gyro = %d, Y Gyro = %d, Z Gyro = %d, Temperature = %f, Tyre pressure = %f, Sea pressure = %f, Humidity = %f",(int) xaccel, (int)yaccel, (int)zaccel, (int)xgyro, (int)ygyro, (int)zgyro, temp, station_press, sea_press, humidity);
+    	snprintf(message.mesg_text, sizeof(message.mesg_text), "%d", roll);
+    	msgsnd(msgid, &message, sizeof(message), 0);
+    	snprintf(message.mesg_text, sizeof(message.mesg_text), "%d", (temp) );
+    	msgsnd(msgid, &message, sizeof(message), 0);  
+    	snprintf(message.mesg_text, sizeof(message.mesg_text), "%d", (station_press) );
+    	msgsnd(msgid, &message, sizeof(message), 0);
+    	
+    	sleep(3);    	
+    //	snprintf(message.mesg_text, sizeof(message.mesg_text), "X acceleration = %d, Y acceleration = %d, Z acceleration = %d, X Gyro = %d, Y Gyro = %d, Z Gyro = %d, Temperature = %f, Tyre pressure = %f, Sea pressure = %f, Humidity = %f",(int) xaccel, (int)yaccel, (int)zaccel, (int)xgyro, (int)ygyro, (int)zgyro, temp, station_press, sea_press, humidity);
     	
     	    // msgsnd to send message
-    	msgsnd(msgid, &message, sizeof(message), 0);
+
     
-    	sleep(5);
+
     }
 
 

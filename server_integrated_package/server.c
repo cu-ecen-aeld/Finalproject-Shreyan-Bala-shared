@@ -54,9 +54,8 @@ void serversend(int cli_fd) {
 	    	// msgrcv to receive message
    		 msgrcv(msgid, &message, sizeof(message), 1, 0);
    		 
-   		 write(cli_fd, "\n", sizeof("\n") );
+   		 //write(cli_fd, "\n", sizeof("\n") );
 		 write(cli_fd, message.mesg_text, sizeof(message.mesg_text)); //Send data to client
-		 sleep(6);
 	}
 }
 

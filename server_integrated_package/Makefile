@@ -7,7 +7,7 @@ ifeq ($(CFLAGS),)
 endif
  
 ifeq ($(LDFLAGS),)
-	LDFLAGS= -pthread 
+	LDFLAGS= -pthread -lm
 endif
 
 
@@ -27,7 +27,7 @@ all: $(TARGET1) $(TARGET2)
 
 
 $(TARGET1): $(SRCS1) 
-	$(CC) $(CFLAGS) $^ -o $@ $(INCLUDES) $(LDFLAGS)
+	$(CC) $(CFLAGS) $^ -o $@ $(INCLUDES) $(LDFLAGS) -lm
 
 $(TARGET2): $(SRCS2) 
 	$(CC) $(CFLAGS) $^ -o $@ $(INCLUDES) $(LDFLAGS)
