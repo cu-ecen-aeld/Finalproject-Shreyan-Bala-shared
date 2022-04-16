@@ -44,8 +44,8 @@ int16_t xgyro  = 0;
 int16_t ygyro = 0;
 int16_t zgyro = 0;
 
-double temp = 0.0;
-double station_press = 0.0;
+int temp = 0;
+int station_press = 0;
 double sea_press = 0.0;
 double humidity = 0.0;
 
@@ -208,9 +208,9 @@ int main(int argc, char **argv) {
     	
     	snprintf(message.mesg_text, sizeof(message.mesg_text), "%d", roll);
     	msgsnd(msgid, &message, sizeof(message), 0);
-    	snprintf(message.mesg_text, sizeof(message.mesg_text), "%d", temp);
+    	snprintf(message.mesg_text, sizeof(message.mesg_text), "%d", (temp) );
     	msgsnd(msgid, &message, sizeof(message), 0);  
-    	snprintf(message.mesg_text, sizeof(message.mesg_text), "%d", station_press);
+    	snprintf(message.mesg_text, sizeof(message.mesg_text), "%d", (station_press) );
     	msgsnd(msgid, &message, sizeof(message), 0);
     	
     	sleep(3);    	
