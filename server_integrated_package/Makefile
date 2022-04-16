@@ -7,7 +7,7 @@ ifeq ($(CFLAGS),)
 endif
  
 ifeq ($(LDFLAGS),)
-	LDFLAGS= -pthread 
+	LDFLAGS= -pthread -lm
 endif
 
 
