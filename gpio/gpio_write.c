@@ -8,7 +8,7 @@
 #include <gpiod.h>
 #include <unistd.h>
 
-#define GPIO_PIN    4
+#define GPIO_PIN    5
 
 struct gpiod_chip *chip;
 struct gpiod_line *line;
