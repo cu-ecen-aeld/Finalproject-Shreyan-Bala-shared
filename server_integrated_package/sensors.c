@@ -62,12 +62,12 @@ void mpu6050() {
 	
     if ((fd = open(fileName, O_RDWR)) < 0) {
         printf("Failed to open i2c port\n");
-        exit(1);
+      //  exit(1);
     }
 	
     if (ioctl(fd, I2C_SLAVE, address) < 0) {
         printf("Unable to get bus access to talk to slave\n");
-        exit(1);
+      //  exit(1);
     }
     
     int8_t power = i2c_smbus_read_byte_data(fd, MPU_POWER1);
