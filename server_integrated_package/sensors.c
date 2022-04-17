@@ -202,23 +202,25 @@ int main(int argc, char **argv) {
     message.mesg_type = 1;
     int roll = 0;
     while(1) {
-    	mpu6050();
-    	bme280();
-    	roll = atan2(yaccel, zaccel)* 180 / 3.14159265;
+    	//mpu6050();
+    	//bme280();
+    	//roll = atan2(yaccel, zaccel)* 180 / 3.14159265;
     	
-    	snprintf(message.mesg_text, sizeof(message.mesg_text), "%d", roll);
+    /*	snprintf(message.mesg_text, sizeof(message.mesg_text), "%s", "hello1");
     	msgsnd(msgid, &message, sizeof(message), 0);
-    	snprintf(message.mesg_text, sizeof(message.mesg_text), "%d", (temp) );
+    	//sleep(2);
+    	snprintf(message.mesg_text, sizeof(message.mesg_text), "%s", "hello2" );
     	msgsnd(msgid, &message, sizeof(message), 0);  
-    	snprintf(message.mesg_text, sizeof(message.mesg_text), "%d", (station_press) );
+    	//sleep(2);
+    	snprintf(message.mesg_text, sizeof(message.mesg_text), "%s", "hello3" );
     	msgsnd(msgid, &message, sizeof(message), 0);
-    	
-    	sleep(3);    	
-    //	snprintf(message.mesg_text, sizeof(message.mesg_text), "X acceleration = %d, Y acceleration = %d, Z acceleration = %d, X Gyro = %d, Y Gyro = %d, Z Gyro = %d, Temperature = %f, Tyre pressure = %f, Sea pressure = %f, Humidity = %f",(int) xaccel, (int)yaccel, (int)zaccel, (int)xgyro, (int)ygyro, (int)zgyro, temp, station_press, sea_press, humidity);
+    	//sleep(2); 
+    	*/
+    	snprintf(message.mesg_text, sizeof(message.mesg_text), "roll%d Temp%d Tyre%d", (int)roll, (int)temp, (int)station_press);
     	
     	    // msgsnd to send message
-
-    
+    	msgsnd(msgid, &message, sizeof(message), 0);
+	sleep(2);
 
     }
 

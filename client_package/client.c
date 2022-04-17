@@ -9,7 +9,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <syslog.h>
-#include <gpiod.h>
+//#include <gpiod.h>
 
 #define IP_ADDRESS_SIZE 20
 
@@ -73,7 +73,7 @@ int main (int argc, char *argv[])
 	while (1)
 	{
 	       read(socketfd,datafromserver,sizeof(datafromserver));	
-	       printf("Data Read from server is %s\n",datafromserver);
+	       printf("%s\n",datafromserver);
 	     //  blink_green_led();
 	     
 

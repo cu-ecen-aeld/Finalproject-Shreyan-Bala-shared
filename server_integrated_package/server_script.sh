@@ -6,6 +6,8 @@ make clean
 
 make
 
-server &
+./sensor &
 
-sensor 
+./server 
+
+ 
