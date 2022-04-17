@@ -201,7 +201,6 @@ int main(int argc, char **argv) {
     msgid = msgget(key, 0666 | IPC_CREAT);
     message.mesg_type = 1;
     while(1) {
-<<<<<<< HEAD
     	//mpu6050();
     	//bme280();
     	//roll = atan2(yaccel, zaccel)* 180 / 3.14159265;
@@ -222,17 +221,7 @@ int main(int argc, char **argv) {
     	msgsnd(msgid, &message, sizeof(message), 0);
 	sleep(2);
 
-=======
-    	mpu6050();
-    	bme280();
-    	
-    	snprintf(message.mesg_text, sizeof(message.mesg_text), "X acceleration = %d, Y acceleration = %d, Z acceleration = %d, X Gyro = %d, Y Gyro = %d, Z Gyro = %d, Temperature = %f, Tyre pressure = %f, Sea pressure = %f, Humidity = %f",(int) xaccel, (int)yaccel, (int)zaccel, (int)xgyro, (int)ygyro, (int)zgyro, temp, station_press, sea_press, humidity);
-    	
-    	    // msgsnd to send message
-    	msgsnd(msgid, &message, sizeof(message), 0);
-    
-    	sleep(5);
->>>>>>> c008b26f87d1a5d10828a0303890ac6077c09997
+
     }
 
 
