@@ -73,13 +73,10 @@ int main (int argc, char *argv[])
 	while (1)
 	{
 	       read(socketfd,datafromserver,sizeof(datafromserver));	
-<<<<<<< HEAD
+
 	       printf("%s\n",datafromserver);
-	     //  blink_green_led();
-=======
-	       printf("Data Read from server is %s\n",datafromserver);
 	       blink_green_led();
->>>>>>> c008b26f87d1a5d10828a0303890ac6077c09997
+
 	     
 
 	}
