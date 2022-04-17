@@ -104,7 +104,7 @@ double sta2sea(double station_press) {
 
 void bme280() {
     
-    bool init_flag = false;
+    static bool init_flag = false;
     uint8_t dataBlock[8];
     int32_t temp_int;
     int32_t press_int;
