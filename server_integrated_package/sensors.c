@@ -201,9 +201,9 @@ int main(int argc, char **argv) {
     msgid = msgget(key, 0666 | IPC_CREAT);
     message.mesg_type = 1;
     while(1) {
-    	//mpu6050();
-    	//bme280();
-    	//roll = atan2(yaccel, zaccel)* 180 / 3.14159265;
+    	mpu6050();
+    	bme280();
+    	int roll = atan2(yaccel, zaccel)* 180 / 3.14159265;
     	
     /*	snprintf(message.mesg_text, sizeof(message.mesg_text), "%s", "hello1");
     	msgsnd(msgid, &message, sizeof(message), 0);
