@@ -36,12 +36,12 @@ int main (int argc, char *argv[])
 	myDisplay.setDisplayMode(SSD1306::Mode::SCROLL);
 	myDisplay.textDisplay("***Vehicle Status***");
 	
-	green_led_status = green_led_init();
-	if (green_led_status == -1)
-	{
-	    printf("ERROR: Initializing Green Led");
-	      syslog(LOG_DEBUG, "ERROR: Initializing Green Led");
-	}
+	//green_led_status = green_led_init();
+	//if (green_led_status == -1)
+	//{
+	//    printf("ERROR: Initializing Green Led");
+	//      syslog(LOG_DEBUG, "ERROR: Initializing Green Led");
+	//}
 // Client code
 	int socketfd = 0;
 	int socketconnectfd = 0;
@@ -81,9 +81,9 @@ int main (int argc, char *argv[])
 	while (1)
 	{
 	       read(socketfd,datafromserver,sizeof(datafromserver));	
-
 	       printf("%s\n",datafromserver);
-	       blink_green_led();
+	       
+	     //  blink_green_led();
 
 	     
 
