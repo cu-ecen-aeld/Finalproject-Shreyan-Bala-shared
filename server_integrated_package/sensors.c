@@ -101,10 +101,9 @@ double sta2sea(double station_press) {
     return station_press * exp((-M * G * -LOCAL_HASL) / (R * T));
 }
 
-
+static bool init_flag = false;
 void bme280() {
-    
-    static bool init_flag = false;
+  
     uint8_t dataBlock[8];
     int32_t temp_int;
     int32_t press_int;
