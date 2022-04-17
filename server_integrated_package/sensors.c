@@ -13,6 +13,7 @@
 #include "compensation.h"
 #include <math.h>
 #include <sys/ipc.h>
+#include <stdbool.h>
 #include <sys/msg.h>
 #define MAX 10
 
@@ -35,6 +36,7 @@
 
 #define MPU_POWER1 0x6b
 #define MPU_POWER2 0x6c
+
 
 
 int16_t xaccel = 0;
@@ -91,9 +93,6 @@ void mpu6050() {
     zgyro = i2c_smbus_read_byte_data(fd, MPU_GYRO_ZOUT1) << 8 |
                         i2c_smbus_read_byte_data(fd, MPU_GYRO_ZOUT2);
 
-
-    //printf("accel x,y,z: %d, %d, %d\n", (int)xaccel, (int)yaccel, (int)zaccel);
-    //printf("gyro x,y,z: %d, %d, %d\n\n", (int)xgyro, (int)ygyro, (int)zgyro);
     
 }
 
@@ -106,14 +105,18 @@ double sta2sea(double station_press) {
 void bme280() {
     
     bool init_flag = false;
-    
+    uint8_t dataBlock[8];
+    int32_t temp_int;
+    int32_t press_int;
+    int32_t hum_int;
+    int fd;
+
     if( init_flag == false) {
     
-    	int fd = 0;
-    	uint8_t dataBlock[8];
-   	int32_t temp_int = 0;
-   	int32_t press_int = 0;
-  	int32_t hum_int = 0;
+    	fd = 0;
+   	temp_int = 0;
+   	press_int = 0;
+  	hum_int = 0;
 
 
    	 /* open i2c comms */
