@@ -210,7 +210,7 @@ int main(int argc, char **argv) {
     	bme280();
     	mpu6050();
 
-    	int roll = atan2(yaccel, zaccel)* 180 / 3.14159265;
+    	int roll = (atan2(yaccel, zaccel)* 180 / 3.14159265) + 100;
     	
     	snprintf(message.mesg_text, sizeof(message.mesg_text), "roll%d Temp%d Tyre%d", (int)roll, (int)temp, (int)station_press);
     	
