@@ -116,14 +116,15 @@ void bme280() {
    	temp_int = 0;
    	press_int = 0;
   	hum_int = 0;
-
+  	
+	printf("\nhello habibi");
 
    	 /* open i2c comms */
    	 if ((fd = open(DEV_PATH, O_RDWR)) < 0) {
   	      perror("Unable to open i2c device");
   	      return;
   	  }
-
+	
    	 /* configure i2c slave */
    	 if (ioctl(fd, I2C_SLAVE, DEV_ID) < 0) {
  	       perror("Unable to configure i2c slave device");
