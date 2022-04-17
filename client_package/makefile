@@ -7,11 +7,11 @@ ifeq ($(CFLAGS),)
 endif
  
 ifeq ($(LDFLAGS),)
-	LDFLAGS= -pthread -lgpiod
+	LDFLAGS= -pthread -lgpiod -std=c++11
 endif
 
 TARGET= client
-SRCS:= client.c
+SRCS:= client.cpp ssd1306.cpp
 
 default: $(TARGET)
 all: $(TARGET)

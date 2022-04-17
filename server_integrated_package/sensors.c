@@ -104,49 +104,57 @@ double sta2sea(double station_press) {
 
 
 void bme280() {
-    int fd = 0;
-    uint8_t dataBlock[8];
-    int32_t temp_int = 0;
-    int32_t press_int = 0;
-    int32_t hum_int = 0;
+    
+    bool init_flag = false;
+    
+    if( init_flag == false) {
+    
+    	int fd = 0;
+    	uint8_t dataBlock[8];
+   	int32_t temp_int = 0;
+   	int32_t press_int = 0;
+  	int32_t hum_int = 0;
 
 
-    /* open i2c comms */
-    if ((fd = open(DEV_PATH, O_RDWR)) < 0) {
-        perror("Unable to open i2c device");
-        return;
-    }
+   	 /* open i2c comms */
+   	 if ((fd = open(DEV_PATH, O_RDWR)) < 0) {
+  	      perror("Unable to open i2c device");
+  	      return;
+  	  }
 
-    /* configure i2c slave */
-    if (ioctl(fd, I2C_SLAVE, DEV_ID) < 0) {
-        perror("Unable to configure i2c slave device");
-        close(fd);
-        return;
-    }
+   	 /* configure i2c slave */
+   	 if (ioctl(fd, I2C_SLAVE, DEV_ID) < 0) {
+ 	       perror("Unable to configure i2c slave device");
+  	      close(fd);
+  	      return;
+ 	   }
 
-    /* check our identification */
-    if (i2c_smbus_read_byte_data(fd, IDENT) != 0x60) {
-        perror("device ident error");
-        close(fd);
-        return;
-    }
+  	  /* check our identification */
+  	  if (i2c_smbus_read_byte_data(fd, IDENT) != 0x60) {
+  	      perror("device ident error");
+  	      close(fd);
+   	     return;
+  	  }
 
-    /* device soft reset */
-    i2c_smbus_write_byte_data(fd, SOFT_RESET, 0xB6);
-    usleep(50000);
+   	 /* device soft reset */
+   	 i2c_smbus_write_byte_data(fd, SOFT_RESET, 0xB6);
+   	 usleep(50000);
 
-    /* read and set compensation parameters */
-    setCompensationParams(fd);
+   	 /* read and set compensation parameters */
+   	 setCompensationParams(fd);
 
-    /* humidity o/s x 1 */
-    i2c_smbus_write_byte_data(fd, CTRL_HUM, 0x1);
+    	/* humidity o/s x 1 */
+    	i2c_smbus_write_byte_data(fd, CTRL_HUM, 0x1);
 
-    /* filter off */
-    i2c_smbus_write_byte_data(fd, CONFIG, 0);
+    	/* filter off */
+    	i2c_smbus_write_byte_data(fd, CONFIG, 0);
 
-    /* set forced mode, pres o/s x 1, temp o/s x 1 and take 1st reading */
-    i2c_smbus_write_byte_data(fd, CTRL_MEAS, 0x25);
-
+    	/* set forced mode, pres o/s x 1, temp o/s x 1 and take 1st reading */
+    	i2c_smbus_write_byte_data(fd, CTRL_MEAS, 0x25);
+    	init_flag = true;
+   }
+   
+     usleep(10000);
      /* check data is ready to read */
      if ((i2c_smbus_read_byte_data(fd, STATUS) & 0x9) != 0) {
           printf("%s\n", "Error, data not ready");
@@ -185,10 +193,6 @@ void bme280() {
 }
 
 int main(int argc, char **argv) {
-
-    printf("\n**************************************************************");
-    printf("\n***********************Vehicle Status*************************");
-    printf("\n**************************************************************\n\n");
     
     key_t key;
     int msgid;
@@ -201,20 +205,11 @@ int main(int argc, char **argv) {
     msgid = msgget(key, 0666 | IPC_CREAT);
     message.mesg_type = 1;
     while(1) {
-    	mpu6050();
     	bme280();
+    	mpu6050();
+
     	int roll = atan2(yaccel, zaccel)* 180 / 3.14159265;
     	
-    /*	snprintf(message.mesg_text, sizeof(message.mesg_text), "%s", "hello1");
-    	msgsnd(msgid, &message, sizeof(message), 0);
-    	//sleep(2);
-    	snprintf(message.mesg_text, sizeof(message.mesg_text), "%s", "hello2" );
-    	msgsnd(msgid, &message, sizeof(message), 0);  
-    	//sleep(2);
-    	snprintf(message.mesg_text, sizeof(message.mesg_text), "%s", "hello3" );
-    	msgsnd(msgid, &message, sizeof(message), 0);
-    	//sleep(2); 
-    	*/
     	snprintf(message.mesg_text, sizeof(message.mesg_text), "roll%d Temp%d Tyre%d", (int)roll, (int)temp, (int)station_press);
     	
     	    // msgsnd to send message
