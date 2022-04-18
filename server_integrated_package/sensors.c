@@ -215,7 +215,8 @@ int main(int argc, char **argv) {
     	int roll = (atan2(yaccel, zaccel)* 180 / 3.14159265) + 100;
  
     	snprintf(message.mesg_text, sizeof(message.mesg_text), "roll%d Temp%d Tyre%d", (int)roll, (int)temp, (int)station_press);
-    	
+
+	printf("\nsensor-%s", message.mesg_text);    	
     	    // msgsnd to send message
     	msgsnd(msgid, &message, sizeof(message), 0);
     	
