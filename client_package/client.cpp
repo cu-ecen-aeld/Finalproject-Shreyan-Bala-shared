@@ -83,8 +83,9 @@ int main (int argc, char *argv[])
 	while (1)
 	{
 	       read(socketfd,datafromserver,sizeof(datafromserver));
+	       printf("\nclient-%s", datafromserver);
 	       extractSensorValues(datafromserver);
-       	blink_green_led();
+               blink_green_led();
 
 
 	}
