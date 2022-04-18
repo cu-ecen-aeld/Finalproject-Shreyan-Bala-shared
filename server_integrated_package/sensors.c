@@ -180,9 +180,9 @@ void bme280() {
      /* calculate and print compensated temp. This function is called first, as it also sets the
       * t_fine global variable required by the next two function calls
       */
-    temp = BME280_compensate_T_double(temp_int);
+    temp = BME280_compensate_T_double(temp_int) + 100;
 
-     station_press = BME280_compensate_P_double(press_int) / 100.0;
+     station_press = (BME280_compensate_P_double(press_int) / 100.0) + 100;
 
 
      /* calculate and print compensated press */

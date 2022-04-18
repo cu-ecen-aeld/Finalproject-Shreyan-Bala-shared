@@ -29,7 +29,7 @@ int green_led_status = 0;
 
 int main (int argc, char *argv[])
 {
-	/*SSD1306 myDisplay;
+	SSD1306 myDisplay;
 	myDisplay.initDisplay();
 	myDisplay.clearDisplay();
 	myDisplay.setWordWrap(TRUE);
@@ -41,7 +41,7 @@ int main (int argc, char *argv[])
 	{
 	    printf("ERROR: Initializing Green Led");
 	      syslog(LOG_DEBUG, "ERROR: Initializing Green Led");
-	}*/
+	}
 // Client code
 	int socketfd = 0;
 	int socketconnectfd = 0;
@@ -83,7 +83,7 @@ int main (int argc, char *argv[])
 	       read(socketfd,datafromserver,sizeof(datafromserver));	
 
 	       printf("%s\n",datafromserver);
-	       //blink_green_led();
+	       blink_green_led();
 
 	     
 
