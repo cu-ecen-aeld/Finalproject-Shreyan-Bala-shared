@@ -50,11 +50,8 @@ void serversend(int cli_fd) {
 	int n;
 	// infinite loop to send data every 2 seconds to the client from the server
 	while(1) {
-	
 	    	// msgrcv to receive message
    		 msgrcv(msgid, &message, sizeof(message), 1, 0);
-   		 
-    	printf("\nserver:%s",message.mesg_text); 
 		 write(cli_fd, message.mesg_text, sizeof(message.mesg_text)); //Send data to client
 		 sleep(2);
 	}
