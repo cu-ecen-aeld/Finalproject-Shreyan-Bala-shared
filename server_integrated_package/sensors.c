@@ -219,7 +219,6 @@ int main(int argc, char **argv) {
     	    // msgsnd to send message
     	msgsnd(msgid, &message, sizeof(message), 0);
     	
-    	printf("\nserver:%s",message.mesg_text); 
 	sleep(2);
 
 

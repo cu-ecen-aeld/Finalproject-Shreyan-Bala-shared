@@ -54,7 +54,7 @@ void serversend(int cli_fd) {
 	    	// msgrcv to receive message
    		 msgrcv(msgid, &message, sizeof(message), 1, 0);
    		 
-
+    	printf("\nserver:%s",message.mesg_text); 
 		 write(cli_fd, message.mesg_text, sizeof(message.mesg_text)); //Send data to client
 		 sleep(2);
 	}
