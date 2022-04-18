@@ -101,7 +101,8 @@ double sta2sea(double station_press) {
     return station_press * exp((-M * G * -LOCAL_HASL) / (R * T));
 }
 
-static bool init_flag = false;
+bool init_flag = false;
+
 void bme280() {
   
     uint8_t dataBlock[8];
@@ -116,15 +117,14 @@ void bme280() {
    	temp_int = 0;
    	press_int = 0;
   	hum_int = 0;
-  	
-	printf("\nhello habibi");
+
 
    	 /* open i2c comms */
    	 if ((fd = open(DEV_PATH, O_RDWR)) < 0) {
   	      perror("Unable to open i2c device");
   	      return;
   	  }
-	
+
    	 /* configure i2c slave */
    	 if (ioctl(fd, I2C_SLAVE, DEV_ID) < 0) {
  	       perror("Unable to configure i2c slave device");
