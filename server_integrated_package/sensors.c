@@ -212,20 +212,14 @@ int main(int argc, char **argv) {
     	mpu6050();
 
     	int roll = (atan2(yaccel, zaccel)* 180 / 3.14159265) + 100;
-
  	roll = abs(roll);
-    	snprintf(message.mesg_text, sizeof(message.mesg_text), "roll%d Temp%d Tyre%d", (int)roll, (int)temp, (int)station_press);
-
-	printf("\nsensor-%s", message.mesg_text);    	
-    	    // msgsnd to send message
-    	msgsnd(msgid, &message, sizeof(message), 0);
     	snprintf(buff, sizeof(buff), "roll%d Temp%d Tyre%d", (int)roll, (int)temp, (int)station_press);
 	printf("\nsensor-%s", buff);    	
     	// msgsnd to send message
     	if (mq_send(mqd, buff, sizeof(int) + sizeof(int) + sizeof(int) + 13, 1) == -1) {
     		perror("\nmq_send");
     	}
-
+ 
 	sleep(2);
 
 
@@ -234,4 +228,3 @@ int main(int argc, char **argv) {
 
 
 }
-
