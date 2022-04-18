@@ -21,18 +21,13 @@
 #include <arpa/inet.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
+#include <mqueue.h>
 #define MAX 80
 #define PORT 8080
 #define SA struct sockaddr
 
-int msgid;
-
-// structure for message queue
-struct mesg_buffer {
-    long mesg_type;
-    char mesg_text[200];
-} message;
-
+struct mq_attr attr;
+mqd_t mqd;
 
 /*
  * void serversend(int connfd)
@@ -47,14 +42,15 @@ struct mesg_buffer {
  */
 void serversend(int cli_fd) {
 	
-	int n;
+ 	char buff[sizeof(int) + sizeof(int) + sizeof(int) + 13];
+ 	unsigned int priority;
 	// infinite loop to send data every 2 seconds to the client from the server
 	while(1) {
-	    	// msgrcv to receive message
-	    	 sleep(2);
-   		 msgrcv(msgid, &message, sizeof(message), 1, 0);
-   		 printf("\nserver-%s", message.mesg_text);    	
-		 write(cli_fd, message.mesg_text, sizeof(message.mesg_text)); //Send data to client
+		if(mq_receive(mqd, buff, 1024, &priority) == -1) {
+		    printf("\nERROR: mq_receive failed");
+		}
+   		 printf("\nserver-%s", buff);    	
+		 write(cli_fd, buff, sizeof(buff)); //Send data to client
 
 	}
 }
@@ -106,15 +102,10 @@ int main()
 	
 	printf("Accepted connection from %s", inet_ntoa(cli.sin_addr) );
 
-	key_t key;
-  
-    	// ftok to generate unique key
-    	key = ftok("progfile", 65);
-  
- 	   // msgget creates a message queue
-    	// and returns identifier
-    	msgid = msgget(key, 0666 | IPC_CREAT);
-    
+  	 mqd = mq_open("/sendmq", O_RDWR);
+    	if(mqd == -1) {
+        printf("\nERROR: mq_open failed");
+    	}
 	sleep(1);
 	serversend(connfd); //Send data from server to client
 
