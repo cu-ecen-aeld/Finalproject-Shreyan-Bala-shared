@@ -107,8 +107,7 @@ void extractSensorValues(char datafromserver[])
 	strncpy(temp_string, datafromserver+12, 3);
 	temperature = atoi(temp_string);
 	printf("Temperature value: %d\n",(temperature-100)); 
-	
-	temp_string[7] = {0};
+
 	strncpy(temp_string, datafromserver+19, 3);
 	pressure = atoi(temp_string);
 	printf("Pressure value: %d\n",(pressure-100)); 
