@@ -75,7 +75,6 @@ void mpu6050() {
     int8_t power = i2c_smbus_read_byte_data(fd, MPU_POWER1);
     i2c_smbus_write_byte_data(fd, MPU_POWER1, ~(1 << 6) & power);
 
-    
     int16_t temp1 = i2c_smbus_read_byte_data(fd, MPU_TEMP1) << 8 |
                         i2c_smbus_read_byte_data(fd, MPU_TEMP2);
 
@@ -101,74 +100,73 @@ double sta2sea(double station_press) {
     return station_press * exp((-M * G * -LOCAL_HASL) / (R * T));
 }
 
-static bool init_flag = false;
-void bme280() {
-  
-    uint8_t dataBlock[8];
-    int32_t temp_int;
-    int32_t press_int;
-    int32_t hum_int;
-    int fd;
 
-    if( init_flag == false) {
+uint8_t dataBlock[8];
+int32_t temp_int;
+int32_t press_int;
+int32_t hum_int;
+int fd_bme;
     
-    	fd = 0;
+void bme280_init(){
+    	fd_bme = 0;
    	temp_int = 0;
    	press_int = 0;
   	hum_int = 0;
-  	
-	printf("\nhello habibi");
+
 
    	 /* open i2c comms */
-   	 if ((fd = open(DEV_PATH, O_RDWR)) < 0) {
+   	 if ((fd_bme = open(DEV_PATH, O_RDWR)) < 0) {
   	      perror("Unable to open i2c device");
   	      return;
   	  }
-	
+
    	 /* configure i2c slave */
-   	 if (ioctl(fd, I2C_SLAVE, DEV_ID) < 0) {
+   	 if (ioctl(fd_bme, I2C_SLAVE, DEV_ID) < 0) {
  	       perror("Unable to configure i2c slave device");
-  	      close(fd);
+  	      close(fd_bme);
   	      return;
  	   }
 
   	  /* check our identification */
-  	  if (i2c_smbus_read_byte_data(fd, IDENT) != 0x60) {
+  	  if (i2c_smbus_read_byte_data(fd_bme, IDENT) != 0x60) {
   	      perror("device ident error");
-  	      close(fd);
+  	      close(fd_bme);
    	     return;
   	  }
 
    	 /* device soft reset */
-   	 i2c_smbus_write_byte_data(fd, SOFT_RESET, 0xB6);
+   	 i2c_smbus_write_byte_data(fd_bme, SOFT_RESET, 0xB6);
    	 usleep(50000);
 
    	 /* read and set compensation parameters */
-   	 setCompensationParams(fd);
+   	 setCompensationParams(fd_bme);
 
     	/* humidity o/s x 1 */
-    	i2c_smbus_write_byte_data(fd, CTRL_HUM, 0x1);
+    	i2c_smbus_write_byte_data(fd_bme, CTRL_HUM, 0x1);
 
     	/* filter off */
-    	i2c_smbus_write_byte_data(fd, CONFIG, 0);
+    	i2c_smbus_write_byte_data(fd_bme, CONFIG, 0);
 
     	/* set forced mode, pres o/s x 1, temp o/s x 1 and take 1st reading */
-    	i2c_smbus_write_byte_data(fd, CTRL_MEAS, 0x25);
-    	init_flag = true;
-   }
+    	i2c_smbus_write_byte_data(fd_bme, CTRL_MEAS, 0x25);
+
+
+}
+  
+void bme280() {
    
      usleep(10000);
      /* check data is ready to read */
-     if ((i2c_smbus_read_byte_data(fd, STATUS) & 0x9) != 0) {
+     if ((i2c_smbus_read_byte_data(fd_bme, STATUS) & 0x9) != 0) {
           printf("%s\n", "Error, data not ready");
           return;
      }
 
      /* read data registers */
-     i2c_smbus_read_i2c_block_data(fd, DATA_START_ADDR, DATA_LENGTH, dataBlock);
+     i2c_smbus_read_i2c_block_data(fd_bme, DATA_START_ADDR, DATA_LENGTH, dataBlock);
 
      /* awake and take next reading */
-     i2c_smbus_write_byte_data(fd, CTRL_MEAS, 0x25);
+     i2c_smbus_write_byte_data(fd_bme, CTRL_MEAS, 0x25);
 
      /* get raw temp */
      temp_int = (dataBlock[3] << 16 | dataBlock[4] << 8 | dataBlock[5]) >> 4;
@@ -209,6 +207,7 @@ int main(int argc, char **argv) {
     // and returns identifier
     msgid = msgget(key, 0666 | IPC_CREAT);
     message.mesg_type = 1;
+    bme280_init();
     while(1) {
     	bme280();
     	mpu6050();
