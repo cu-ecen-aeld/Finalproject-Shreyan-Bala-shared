@@ -105,18 +105,17 @@ void extractSensorValues(char datafromserver[])
 	char temp_string[7] = {0};
 	strncpy(temp_string, datafromserver+4, 3);
 	roll = atoi(temp_string);
-	printf("Roll value: %d\n",roll); 
+	printf("Roll value: %d\n",(roll-100)); 
 	
 	
 	strncpy(temp_string, datafromserver+12, 3);
-	temp_string[2] = '\0';;
 	temperature = atoi(temp_string);
-	printf("Temperature value: %d\n",temperature); 
+	printf("Temperature value: %d\n",(temperature-100)); 
 	
 	temp_string[7] = {0};
 	strncpy(temp_string, datafromserver+19, 3);
 	pressure = atoi(temp_string);
-	printf("Pressure value: %d\n",pressure); 
+	printf("Pressure value: %d\n",(pressure-100)); 
 	
 
 }
