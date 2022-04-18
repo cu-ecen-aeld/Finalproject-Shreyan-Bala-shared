@@ -8,13 +8,15 @@
 #include <sys/ioctl.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <math.h>
+#include <stdbool.h>
+#include <mqueue.h>
+
 #include "i2c_utils.h"
 #include "bme280.h"
 #include "compensation.h"
-#include <math.h>
-#include <sys/ipc.h>
-#include <stdbool.h>
-#include <sys/msg.h>
+
+
 #define MAX 10
 
 #define MPU_ACCEL_XOUT1 0x3b
@@ -50,11 +52,7 @@ double temp = 0.0;
 double station_press = 0.0;
 double sea_press = 0.0;
 double humidity = 0.0;
-
-struct mesg_buffer {
-    long mesg_type;
-    char mesg_text[200];
-} message;
+struct mq_attr attr;
 
 
 void mpu6050() {
@@ -197,29 +195,37 @@ void bme280() {
 
 int main(int argc, char **argv) {
     
-    key_t key;
-    int msgid;
-  
-    // ftok to generate unique key
-    key = ftok("progfile", 65);
-  
-    // msgget creates a message queue
-    // and returns identifier
-    msgid = msgget(key, 0666 | IPC_CREAT);
-    message.mesg_type = 1;
+    mqd_t mqd;
+    char buff[sizeof(int) + sizeof(int) + + sizeof(int) + 13];
+    attr.mq_maxmsg = 10;
+    attr.mq_msgsize = sizeof(int) + sizeof(int) + sizeof(int) +13;
+    
+    mqd = mq_open("/sendmq", O_CREAT | O_RDWR, S_IRWXU, &attr);
+    
+    if(mqd == (mqd_t)-1) {
+        printf("\nError: Message queue creat failed");
+    }
+
     bme280_init();
     while(1) {
     	bme280();
     	mpu6050();
 
     	int roll = (atan2(yaccel, zaccel)* 180 / 3.14159265) + 100;
+
  	roll = abs(roll);
     	snprintf(message.mesg_text, sizeof(message.mesg_text), "roll%d Temp%d Tyre%d", (int)roll, (int)temp, (int)station_press);
 
 	printf("\nsensor-%s", message.mesg_text);    	
     	    // msgsnd to send message
     	msgsnd(msgid, &message, sizeof(message), 0);
-    	
+    	snprintf(buff, sizeof(buff), "roll%d Temp%d Tyre%d", (int)roll, (int)temp, (int)station_press);
+	printf("\nsensor-%s", buff);    	
+    	// msgsnd to send message
+    	if (mq_send(mqd, buff, sizeof(int) + sizeof(int) + sizeof(int) + 13, 1) == -1) {
+    		perror("\nmq_send");
+    	}
+
 	sleep(2);
 
 
