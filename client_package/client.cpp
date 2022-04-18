@@ -23,10 +23,11 @@
 
 int green_led_init();
 void blink_green_led();
+void extractSensorValues(char datafromserver[]);
 struct gpiod_chip *gpio_fd;
 struct gpiod_line *gpio_green_line;
 int green_led_status = 0;
-
+char datafromserver[1000];
 int main (int argc, char *argv[])
 {
 	SSD1306 myDisplay;
@@ -42,11 +43,12 @@ int main (int argc, char *argv[])
 	    printf("ERROR: Initializing Green Led");
 	      syslog(LOG_DEBUG, "ERROR: Initializing Green Led");
 	}
+
 // Client code
 	int socketfd = 0;
 	int socketconnectfd = 0;
 	//int bytes_read = 0;
-	char datafromserver[1000];
+	
 	openlog("Socket Application client",LOG_PID,LOG_USER);
 	printf("Welcome to Socket Application - CLIENT\n");
 	// TODO: Check the actual socket size
@@ -80,17 +82,39 @@ int main (int argc, char *argv[])
 	printf("connected to Server\n");
 	while (1)
 	{
-	       read(socketfd,datafromserver,sizeof(datafromserver));	
+	       read(socketfd,datafromserver,sizeof(datafromserver));
+	       extractSensorValues(datafromserver);
+       	blink_green_led();
 
-	       printf("%s\n",datafromserver);
-	       blink_green_led();
-
-	     
 
 	}
 	
 }
 
+
+void extractSensorValues(char datafromserver[])
+{
+	int roll;
+	int temperature;
+	int pressure;
+	char temp_string[7] = {0};
+	strncpy(temp_string, datafromserver+4, 3);
+	roll = atoi(temp_string);
+	printf("Roll value: %d\n",roll); 
+	
+	
+	strncpy(temp_string, datafromserver+12, 3);
+	temp_string[2] = '\0';;
+	temperature = atoi(temp_string);
+	printf("Temperature value: %d\n",temperature); 
+	
+	temp_string[7] = {0};
+	strncpy(temp_string, datafromserver+19, 3);
+	pressure = atoi(temp_string);
+	printf("Pressure value: %d\n",pressure); 
+	
+
+}
 int green_led_init()
 {
 	int status = SUCCESS;

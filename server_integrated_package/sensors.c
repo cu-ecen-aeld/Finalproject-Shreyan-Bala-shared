@@ -180,9 +180,11 @@ void bme280() {
      /* calculate and print compensated temp. This function is called first, as it also sets the
       * t_fine global variable required by the next two function calls
       */
+
     temp = BME280_compensate_T_double(temp_int) + 100;
 
      station_press = (BME280_compensate_P_double(press_int) / 100.0) + 100;
+
 
 
      /* calculate and print compensated press */
@@ -211,7 +213,7 @@ int main(int argc, char **argv) {
     	mpu6050();
 
     	int roll = (atan2(yaccel, zaccel)* 180 / 3.14159265) + 100;
-    	
+ 
     	snprintf(message.mesg_text, sizeof(message.mesg_text), "roll%d Temp%d Tyre%d", (int)roll, (int)temp, (int)station_press);
     	
     	    // msgsnd to send message
