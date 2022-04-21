@@ -37,12 +37,12 @@ int main (int argc, char *argv[])
 	myDisplay.setDisplayMode(SSD1306::Mode::SCROLL);
 	myDisplay.textDisplay("***Vehicle Status***");
 	
-	//green_led_status = green_led_init();
-	//if (green_led_status == -1)
-	//{
-	   // printf("ERROR: Initializing Green Led");
-	   //   syslog(LOG_DEBUG, "ERROR: Initializing Green Led");
-	//}
+	green_led_status = green_led_init();
+	if (green_led_status == -1)
+	{
+	    printf("ERROR: Initializing Green Led");
+	    syslog(LOG_DEBUG, "ERROR: Initializing Green Led");
+	}
 
 // Client code
 	int socketfd = 0;
@@ -83,9 +83,8 @@ int main (int argc, char *argv[])
 	while (1)
 	{
 	       read(socketfd,datafromserver,sizeof(datafromserver));
-	       printf("\nclient-%s\n", datafromserver);
 	       extractSensorValues(datafromserver);
-              // blink_green_led();
+               blink_green_led();
 
 
 	}
@@ -109,40 +108,21 @@ void extractSensorValues(char datafromserver[])
 		strncpy(dest_str,temp_str+4,3);
 		roll_value = atoi(dest_str);
 		strncpy(temp_str,"",strlen(temp_str));
-		printf("Reference Roll value: %d\n",(roll_value - 100)); 
+		printf("Roll value: %d\n",(roll_value - 100)); 
 			
-	
-		strncpy(temp_str,detect_str+16,7);
+		strncpy(temp_str,detect_str+8,7);
 		strncpy(dest_str,temp_str+4,3);
 		temperature_value = atoi(dest_str);
 		strncpy(temp_str,"",strlen(temp_str));
-		printf("Reference temperature value: %d\n",(temperature_value-100)); 
-
-		strncpy(temp_str,detect_str+8,7);
+		printf("Temperature value: %d\n",(temperature_value-100)); 
+	
+		strncpy(temp_str,detect_str+16,7);
 		strncpy(dest_str,temp_str+4,3);
 		pressure_value = atoi(dest_str);
 		strncpy(temp_str,"",strlen(temp_str));
-		printf("Reference pressure value: %d\n",(pressure_value-100)); 
-		
-	int roll=0;
-	int temperature=0;
-	int pressure=0;
-	char temp_string1[7] = {0};
-	strncpy(temp_string1, datafromserver+4, 3);
-	roll = atoi(temp_string1);
-	printf("Roll value: %d\n",(roll-100)); 
-	
-	strncpy(temp_string1,"",strlen(temp_string1));
-	strncpy(temp_string1, datafromserver+12, 3);
-	temperature = atoi(temp_string1);
-	printf("Temperature value: %d\n",(temperature-100)); 
+		printf("Pressure value: %d\n",(pressure_value-100)); 
 
-	strncpy(temp_string1,"",strlen(temp_string1));
-	strncpy(temp_string1, datafromserver+19, 3);
-	pressure = atoi(temp_string1);
-	printf("Pressure value: %d\n",(pressure-100)); 
 	
-
 }
 int green_led_init()
 {
