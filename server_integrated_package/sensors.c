@@ -212,7 +212,11 @@ int main(int argc, char **argv) {
     	mpu6050();
 
     	int roll = (atan2(yaccel, zaccel)* 180 / 3.14159265) + 100;
+<<<<<<< HEAD
  	roll = ABS(roll);
+=======
+ 	roll = abs(roll);
+>>>>>>> a4ed62f8c4eb28bdecea0735ff99589e17b8b600
     	snprintf(buff, sizeof(buff), "roll%d Temp%d Tyre%d", (int)roll, (int)temp, (int)station_press);
 	printf("\nsensor-%s", buff);    	
     	// msgsnd to send message
@@ -228,4 +232,3 @@ int main(int argc, char **argv) {
 
 
 }
-
