@@ -39,7 +39,7 @@
 #define MPU_POWER1 0x6b
 #define MPU_POWER2 0x6c
 
-
+#define ABS(x) (x < 0) ? (-x) : (x)               //Absolute value
 
 int16_t xaccel = 0;
 int16_t yaccel = 0;
@@ -212,7 +212,7 @@ int main(int argc, char **argv) {
     	mpu6050();
 
     	int roll = (atan2(yaccel, zaccel)* 180 / 3.14159265) + 100;
- 	
+ 	roll = ABS(roll);
     	snprintf(buff, sizeof(buff), "roll%d Temp%d Tyre%d", (int)roll, (int)temp, (int)station_press);
 	printf("\nsensor-%s", buff);    	
     	// msgsnd to send message
