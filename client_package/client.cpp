@@ -28,14 +28,16 @@ struct gpiod_chip *gpio_fd;
 struct gpiod_line *gpio_green_line;
 int green_led_status = 0;
 char datafromserver[1000];
+SSD1306 myDisplay;
+	
 int main (int argc, char *argv[])
 {
-	SSD1306 myDisplay;
+
 	myDisplay.initDisplay();
 	myDisplay.clearDisplay();
 	myDisplay.setWordWrap(TRUE);
 	myDisplay.setDisplayMode(SSD1306::Mode::SCROLL);
-	myDisplay.textDisplay("***Vehicle Status***");
+
 	
 	green_led_status = green_led_init();
 	if (green_led_status == -1)
@@ -94,8 +96,8 @@ int main (int argc, char *argv[])
 //DATA PACKET:   roll123 temp234 tyre567
 void extractSensorValues(char datafromserver[])
 {
-		
-
+	char buff[50];
+	myDisplay.clearDisplay();
 	int roll_value = 0;
 	int temperature_value = 0;
 	int pressure_value=0;
@@ -121,9 +123,13 @@ void extractSensorValues(char datafromserver[])
 		pressure_value = atoi(dest_str);
 		strncpy(temp_str,"",strlen(temp_str));
 		printf("Pressure value: %d\n",(pressure_value-100)); 
-
-	
+		
+		myDisplay.textDisplay("***Vehicle Status***");
+		
+    		snprintf(buff, sizeof(buff), "Roll= %d\n Temperature =%d\n Tyre pressure =%d", (roll_value - 100), (temperature_value-100), (pressure_value-100) );
+		myDisplay.textDisplay(buff);
 }
+
 int green_led_init()
 {
 	int status = SUCCESS;
