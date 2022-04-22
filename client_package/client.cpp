@@ -124,9 +124,13 @@ void extractSensorValues(char datafromserver[])
 		strncpy(temp_str,"",strlen(temp_str));
 		printf("Pressure value: %d\n",(pressure_value-100)); 
 		
-		myDisplay.textDisplay("***Vehicle Status***");
-		
-    		snprintf(buff, sizeof(buff), "Roll= %d\n Temperature =%d\n Tyre pressure =%d", (roll_value - 100), (temperature_value-100), (pressure_value-100) );
+		myDisplay.textDisplay("*****Vehicle Status*****");
+		myDisplay.textDisplay("************************");
+    		snprintf(buff, sizeof(buff), "Roll= %d", (roll_value-100));
+		myDisplay.textDisplay(buff);
+    		snprintf(buff, sizeof(buff), "Temperature= %d", (temperature_value-100));
+		myDisplay.textDisplay(buff);
+    		snprintf(buff, sizeof(buff), "Tyre Pressure= %d", (pressure_value-100));
 		myDisplay.textDisplay(buff);
 }
 
