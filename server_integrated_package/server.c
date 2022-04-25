@@ -6,6 +6,7 @@
 *References: 
 *https://www.geeksforgeeks.org/tcp-server-client-implementation-in-c/
 *AESD Assignment Content
+*RTES Course content for message queues
 */
 
 #include <stdio.h>
@@ -22,6 +23,7 @@
 #include <sys/ipc.h>
 #include <sys/msg.h>
 #include <mqueue.h>
+
 #define MAX 80
 #define PORT 8080
 #define SA struct sockaddr
@@ -44,9 +46,10 @@ void serversend(int cli_fd) {
 	
  	char buff[sizeof(int) + sizeof(int) + sizeof(int) + 13];
  	unsigned int priority;
-	// infinite loop to send data every 2 seconds to the client from the server
+	// infinite loop to send data every 2 seconds to the client from the server after sensor data over message queue
 	while(1) {
-		if(mq_receive(mqd, buff, 1024, &priority) == -1) {
+	
+		if(mq_receive(mqd, buff, 1024, &priority) == -1) { //Obtain sensor data over message queue
 		    printf("\nERROR: mq_receive failed");
 		}
    		 printf("\nserver-%s", buff);    	
@@ -102,10 +105,12 @@ int main()
 	
 	printf("Accepted connection from %s", inet_ntoa(cli.sin_addr) );
 
-  	 mqd = mq_open("/sendmq", O_RDWR);
+  	mqd = mq_open("/sendmq", O_RDWR); //Open named message queue that was created in the sensors process
+    	
     	if(mqd == -1) {
-        printf("\nERROR: mq_open failed");
+      	  printf("\nERROR: mq_open failed");
     	}
+    	
 	sleep(1);
 	serversend(connfd); //Send data from server to client
 
