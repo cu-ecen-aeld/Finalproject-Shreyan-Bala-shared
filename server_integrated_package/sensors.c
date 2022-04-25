@@ -1,5 +1,19 @@
-//Reference: https://github.com/mindbeast/rpi-mpu6050/blob/master/rpi-mpu6050.c
-//Modified by Balapranesh Elango
+/*
+ *File: sensors.c
+ *
+ *Brief: Data from MPU6050 and BME280 are collected over the same I2C bus and the
+ *	 roll is calculated. The collected sensor data is sent to the server process over
+ *	 a message queue periodically
+ *
+ *BME280 code  => Shreyan Prabhu
+ *MPU6050 code => Balapranesh Elango
+ *
+ *sensor code integration and message queue implementation => Balapranesh Elango
+ *
+ *Reference: https://github.com/mindbeast/rpi-mpu6050/blob/master/rpi-mpu6050.c
+ *           https://github.com/davebm1/c-bme280-pi
+ */
+
 
 #include <stdio.h>
 #include <linux/i2c-dev.h>
@@ -54,7 +68,16 @@ double sea_press = 0.0;
 double humidity = 0.0;
 struct mq_attr attr;
 
-
+/*************************************************************************
+*function: void mpu6050()
+*
+*Brief: Obtains MPU6050 sensor data over I2C and stores it in a global variable
+*
+*Returns: None
+*
+*Arguments: None
+*
+**************************************************************************/
 void mpu6050() {
     int fd;
     char *fileName = "/dev/i2c-1";
@@ -105,7 +128,17 @@ int32_t press_int;
 int32_t hum_int;
 int fd_bme;
     
-void bme280_init(){
+/*************************************************************************
+*function: void bme280_init()
+*
+*Brief: Initializes the bme280 sensor by configuring I2C
+*
+*Returns: None
+*
+*Arguments: None
+*
+**************************************************************************/ 
+void bme280_init() {
     	fd_bme = 0;
    	temp_int = 0;
    	press_int = 0;
@@ -151,6 +184,16 @@ void bme280_init(){
 
 }
   
+/*************************************************************************
+*function: void bme280() 
+*
+*Brief: Obtains the bme280 sensor data and stores it in global variables
+*
+*Returns: None
+*
+*Arguments: None
+*
+**************************************************************************/ 
 void bme280() {
    
      usleep(10000);
@@ -193,14 +236,17 @@ void bme280() {
 
 }
 
+/*
+ *Application entry point
+ */
 int main(int argc, char **argv) {
     
     mqd_t mqd;
-    char buff[sizeof(int) + sizeof(int) + + sizeof(int) + 13];
-    attr.mq_maxmsg = 10;
+    char buff[sizeof(int) + sizeof(int) + + sizeof(int) + 13]; //buffer to send data on the message queue
+    attr.mq_maxmsg = 10;   //Maximum number of messages on the queue
     attr.mq_msgsize = sizeof(int) + sizeof(int) + sizeof(int) +13;
     
-    mqd = mq_open("/sendmq", O_CREAT | O_RDWR, S_IRWXU, &attr);
+    mqd = mq_open("/sendmq", O_CREAT | O_RDWR, S_IRWXU, &attr); //open a named message queue
     
     if(mqd == (mqd_t)-1) {
         printf("\nError: Message queue creat failed");
@@ -208,14 +254,16 @@ int main(int argc, char **argv) {
 
     bme280_init();
     while(1) {
+    /* Obtain Sensor data */
     	bme280();
     	mpu6050();
 
-    	int roll = ABS ((atan2(yaccel, zaccel)* 180 / 3.14159265) )+ 100;
+    	int roll = ABS ((atan2(yaccel, zaccel)* 180 / 3.14159265) )+ 100; //Calculate roll
 
+	/* Convert integer data into strings */
     	snprintf(buff, sizeof(buff), "roll%d Temp%d Tyre%d", (int)roll, (int)temp, (int)station_press);
 	printf("\nsensor-%s", buff);    	
-    	// msgsnd to send message
+    	// msgsnd to send data over the message queue
     	if (mq_send(mqd, buff, sizeof(int) + sizeof(int) + sizeof(int) + 13, 1) == -1) {
     		perror("\nmq_send");
     	}
