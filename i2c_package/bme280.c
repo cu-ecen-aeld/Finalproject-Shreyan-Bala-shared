@@ -1,3 +1,9 @@
+/*
+*@Name:bme280.c
+*@Modified by: Shreyan Prabhu D 
+*@Brief: bme280 source code
+*@Reference:https://github.com/davebm1/c-bme280-pi
+*/
 
 #include "bme280.h"
 #include <fcntl.h>

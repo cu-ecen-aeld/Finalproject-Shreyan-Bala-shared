@@ -2,7 +2,7 @@
   i2c-utils.h - I2C & SMBUS functions extracted from linux/i2c-dev-user.h now
                 that i2c-utils isn't part of the yocto image built for the WP
                 modules.
-
+  @ Modifed by Shreyan Prabhu D and BalaPranesh 
   Copyright (C) 1995-97 Simon G. Vogl
   Copyright (C) 1998-99 Frodo Looijaard <frodol@dds.nl>
 

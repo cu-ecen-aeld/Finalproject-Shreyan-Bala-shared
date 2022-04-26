@@ -1,5 +1,9 @@
-// July 2016
-
+/*
+*@Name: ssd1306 header file
+*@Author: Shreyan Prabhu D and Balapranesh Elango
+*@Brief: OLED initialization code
+*@Reference:
+*/
 #ifdef __cplusplus
 extern "C" {
 #endif

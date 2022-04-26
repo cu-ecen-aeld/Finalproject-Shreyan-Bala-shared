@@ -1,3 +1,12 @@
+/*
+*@Name:bme280.h
+*@Modified by: Shreyan Prabhu D 
+*@Brief: bme280 header file
+*@Reference:https://github.com/davebm1/c-bme280-pi
+*/
+
+
+
 #ifndef __BME280_H
 #define __BME280_H
 

@@ -1,3 +1,8 @@
+/*
+*@Name: ssd1306.cpp
+*@Author: Shreyan Prabhu D and Balapranesh Elango
+*@Brief: OLED initialization code
+*/
 #include <ctype.h>
 #include "charmap.h"
 #include "ssd1306.h"

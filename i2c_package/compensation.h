@@ -1,3 +1,13 @@
+/*
+*@Name:compensation.h header file
+*@Modified by: Shreyan Prabhu D 
+*@Brief: Used for calculation bme280 pressure values
+*@Reference:https://github.com/davebm1/c-bme280-pi
+*/
+
+
+
+
 #ifndef __COMPENSATION_H
 #define __COMPENSATION_H
 

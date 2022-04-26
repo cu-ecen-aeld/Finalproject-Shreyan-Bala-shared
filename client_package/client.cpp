@@ -1,3 +1,10 @@
+/*
+*@Name: aesdsocket.c
+*@Author: Shreyan Prabhu D and Balapranesh Elango
+*@Brief: Source file to start aesd application which can send and receive pockets
+*@Reference:https://beej.us/guide/bgnet/html/#getaddrinfoprepare-to-launch
+*		  : Linux System Programming Robert Love
+*/
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -29,9 +36,17 @@ struct gpiod_line *gpio_green_line;
 int green_led_status = 0;
 char datafromserver[1000];
 SSD1306 myDisplay;
-	
+
+/*
+*@Function: main
+*@brief: consists of Socket initialization, blinking led and oled display functions
+*@argument: argc- number of command line arguments,  argv -command line arguments stored in an array
+*@Return: 0 for success and 1 for failure
+*/
 int main (int argc, char *argv[])
 {
+
+/*Initializing OLED display*/
 
 	myDisplay.initDisplay();
 	myDisplay.clearDisplay();
@@ -46,16 +61,14 @@ int main (int argc, char *argv[])
 	    syslog(LOG_DEBUG, "ERROR: Initializing Green Led");
 	}
 
-// Client code
+/* Client code */
 	int socketfd = 0;
 	int socketconnectfd = 0;
-	//int bytes_read = 0;
-	
 	openlog("Socket Application client",LOG_PID,LOG_USER);
 	printf("Welcome to Socket Application - CLIENT\n");
-	// TODO: Check the actual socket size
 	char server_ipaddress[IP_ADDRESS_SIZE] = {0};
 	memcpy(server_ipaddress, argv[1], strlen(argv[1]));
+	/*Socket address structure values*/
 	struct sockaddr_in server_address;
 	server_address.sin_family = AF_INET;
 	server_address.sin_port = htons(PORT);
@@ -90,10 +103,15 @@ int main (int argc, char *argv[])
 
 
 	}
-	
+	return 0;
 }
 
-//DATA PACKET:   roll123 temp234 tyre567
+/*
+*@Function: ExtractSensorValues
+*@brief: Convert raw string to useful data
+*@argument: data from the Server string
+*@Return: None
+*/
 void extractSensorValues(char datafromserver[])
 {
 	char buff[50];
@@ -134,6 +152,11 @@ void extractSensorValues(char datafromserver[])
 		myDisplay.textDisplay(buff);
 }
 
+/*
+*@Function: Initializing green led
+*@argument: None
+*@Return: sucess if initialization is complete and 0 if failure
+*/
 int green_led_init()
 {
 	int status = SUCCESS;
@@ -162,6 +185,12 @@ int green_led_init()
 
 }
 
+/*
+*@Function:  Blinking gree led to indicate socket communication is established
+*@argument: None
+*@Return: None
+*/
+
 void blink_green_led()
 {
 	
@@ -172,8 +201,6 @@ void blink_green_led()
 	green_led_status ^= 1;
 	gpiod_line_set_value(gpio_green_line, green_led_status);
 	printf("Green_led_status = %d\n",green_led_status);
-	//return status;
-
 	
 
 }
