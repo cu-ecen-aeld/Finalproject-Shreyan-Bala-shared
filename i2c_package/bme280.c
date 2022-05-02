@@ -49,8 +49,7 @@ int main(void) {
     i2c_smbus_write_byte_data(fd, SOFT_RESET, 0xB6);
     usleep(50000);
 
-    /* read and set compensation parameters */
-    setCompensationParams(fd);
+
 
     /* humidity o/s x 1 */
     i2c_smbus_write_byte_data(fd, CTRL_HUM, 0x1);
@@ -62,12 +61,7 @@ int main(void) {
     i2c_smbus_write_byte_data(fd, CTRL_MEAS, 0x25);
 
     for (;;) {
-        /* Sleep for 1 second for demonstration purposes.
-         * Data can be streamed with a sleep time down
-         * to 10 ms [usleep(10000)] with oversampling set at x1.
-         * See section 9, appendix B of the Bosch technical
-         * datasheet for details on measurement time calculation.
-         */
+
         sleep(1);
 
         /* check data is ready to read */
@@ -99,8 +93,7 @@ int main(void) {
         station_press = BME280_compensate_P_double(press_int) / 100.0;
 
         /* calculate and print compensated press */
-        printf("station press: %.2f hPa, sea level press: %.2f  ", station_press,
-               sta2sea(station_press));
+        printf("atmospheric press: %.2f hPa, sta2sea(station_press));
 
         /* calculate and print compensated humidity */
         printf("humidity: %.2f %%rH\n", BME280_compensate_H_double(hum_int));
