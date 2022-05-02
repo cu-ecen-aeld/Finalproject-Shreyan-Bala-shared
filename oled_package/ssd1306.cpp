@@ -1,3 +1,16 @@
+/*
+ *File: ssd1306.c
+ *
+ *Brief:OLED driver
+ *
+ *
+ *Modified by: Balapranesh Elango
+ *
+ *Reference: https://github.com/kjhughes097/pi-ssd1306-oled
+ */
+
+
+
 #include <ctype.h>
 #include "charmap.h"
 #include "ssd1306.h"
